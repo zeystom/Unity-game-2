@@ -14,6 +14,8 @@ public class CharacterMove : MonoBehaviour
     Vector3 mouseDirection;
     float idleMoveX;
     float idleMoveY;
+    float cooldown = 3f;
+    float lastAttackedAt = -9999f;
     public GameObject bulletPref;
     
     void Start()
@@ -68,7 +70,7 @@ public class CharacterMove : MonoBehaviour
 
     private void Attack()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && Time.time > lastAttackedAt + cooldown)
         {
             animator.SetBool("IsAttack", true);
             animator.SetFloat("MoveX", idleMoveY);
@@ -78,9 +80,9 @@ public class CharacterMove : MonoBehaviour
             mouseDirection.z = 0f;
             mouseDirection = mouseDirection - transform.position;
             GameObject bulletInstance = Instantiate(bulletPref, transform.position, Quaternion.identity);
-            bulletInstance.GetComponent<Rigidbody>().velocity = mouseDirection * 5f;
+            bulletInstance.GetComponent<Rigidbody2D>().velocity = mouseDirection * 5f;
             Destroy(bulletInstance, 4);
-            
+            lastAttackedAt = Time.time;
         }
         else
         {
