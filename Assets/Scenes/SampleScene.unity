@@ -328,7 +328,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+  cooldown: 1
   bulletPref: {fileID: 6458840862631346980, guid: ff188b9c138f2a74b87328dd5a7d2fbd, type: 3}
+  meleeAttackPoint: {fileID: 0}
+  meleeAttackRange: 1
 --- !u!143 &476322047
 CharacterController:
   m_ObjectHideFlags: 0
