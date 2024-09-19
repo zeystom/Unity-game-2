@@ -6,7 +6,7 @@ public class CharacterMove : MonoBehaviour
 {
     [Header("Movement Settings")]
     [SerializeField] float moveSpeed = 5f;
-    [SerializeField] float cooldown = 1f; // Использую старую переменную cooldown
+    [SerializeField] float cooldown = 0.5f; // Использую старую переменную cooldown
     [Header("References")]
     [SerializeField] GameObject bulletPref;
 
@@ -21,8 +21,7 @@ public class CharacterMove : MonoBehaviour
     float moveY;
 
     bool canShoot = true;
-    int gunType = 0;
-
+    GunType gunType = GunType.Pistol;
     float lastAttackedAt = -9999f; // Перенос из старого кода
 
     [Header("Melee Attack")]
@@ -40,9 +39,7 @@ public class CharacterMove : MonoBehaviour
         HandleMovementInput();
         HandleAnimation();
         HandleChangeGun();
-
-        if (Input.GetMouseButtonDown(0) && canShoot) 
-            StartCoroutine(Attack());
+        HandleAttack();
     }
 
     void FixedUpdate()
@@ -55,13 +52,13 @@ public class CharacterMove : MonoBehaviour
         switch (layer)
         {
             case 0:
-                animator.SetLayerWeight(0, 1);
+                animator.SetLayerWeight(2, 1);
                 animator.SetLayerWeight(1, 0);
                 break;
 
             case 1:
                 animator.SetLayerWeight(1, 1);
-                animator.SetLayerWeight(0, 0);
+                animator.SetLayerWeight(2, 0);
                 break;
         }
         animator.SetFloat("MoveX", moveX);
@@ -99,48 +96,82 @@ public class CharacterMove : MonoBehaviour
 
     public void Shoot()
     {
-        Vector3 shootingDirection = GetShootingDirection();
-        float angle = Mathf.Atan2(shootingDirection.y, shootingDirection.x) * Mathf.Rad2Deg;
-        GameObject bulletInstance = Instantiate(bulletPref, transform.position + shootingDirection, Quaternion.identity);
-        bulletInstance.GetComponent<Rigidbody2D>().velocity = shootingDirection * 10f;
-        bulletInstance.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
-
-        Destroy(bulletInstance, 4f);
+        if (canShoot)
+        {
+            Vector3 shootingDirection = GetShootingDirection();
+            float angle = Mathf.Atan2(shootingDirection.y, shootingDirection.x) * Mathf.Rad2Deg;
+            GameObject bulletInstance = Instantiate(bulletPref, transform.position + shootingDirection, Quaternion.identity);
+            bulletInstance.GetComponent<Rigidbody2D>().velocity = shootingDirection * 10f;
+            bulletInstance.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+            Destroy(bulletInstance, 4f);
+            canShoot = false;
+        }
     }
 
-    IEnumerator Attack()
+    public void Stab()
     {
-        canShoot = false;
-
-        animator.SetFloat("ShootX", GetShootingDirection().x);
-        animator.SetFloat("ShootY", GetShootingDirection().y);
-
-        switch (gunType)
+        animator.SetTrigger("Melee");
+        Collider2D enemy = Physics2D.OverlapCircle(meleeAttackPoint.position, meleeAttackRange);
+        if (enemy != null)
         {
-            case 0:
-                animator.SetBool("IsAttack", true);
-                break;
-
-            case 1:
-                animator.SetTrigger("Melee");
-                Collider2D enemy = Physics2D.OverlapCircle(meleeAttackPoint.position, meleeAttackRange);
-                Debug.Log(enemy.name);
-                break;
+            Debug.Log("stab!");
+        }
+        else
+        {
+            Debug.Log("stabik");
         }
 
-        yield return new WaitForSeconds(cooldown);
+    }
 
-        animator.SetBool("IsAttack", false);
-        canShoot = true;
+    //IEnumerator Bob()
+    //{
 
+    //    switch (gunType)
+    //    {
+    //        case 0:
+    //            break;
+
+    //        case 1:
+    //            animator.SetTrigger("Melee");
+    //            Collider2D enemy = Physics2D.OverlapCircle(meleeAttackPoint.position, meleeAttackRange);
+    //            Debug.Log(enemy.name);
+    //            break;
+    //    }
+
+    //    yield return new WaitForSeconds(cooldown);
+
+    //    animator.SetBool("IsAttack", false);
+    //    canShoot = true;
+
+    //}
+
+    void HandleAttack()
+    {
+        if (Input.GetMouseButtonDown(0) && canShoot && gunType == GunType.Pistol)
+        {
+            animator.SetFloat("ShootX", GetShootingDirection().x);
+            animator.SetFloat("ShootY", GetShootingDirection().y);
+            animator.SetBool("IsAttack", true);
+        }
+        else if (Input.GetMouseButtonDown(0) && canShoot && gunType == GunType.Knife)
+        {
+            animator.SetFloat("ShootX", GetShootingDirection().x);
+            animator.SetFloat("ShootY", GetShootingDirection().y);
+            Stab();
+        }
+        else if (!Input.GetMouseButtonUp(0))
+        {
+            animator.SetBool("IsAttack", false);
+            canShoot = true;
+        }
     }
 
     void HandleChangeGun()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
-            gunType = 0;
+            gunType = GunType.Knife;
         else if (Input.GetKeyDown(KeyCode.Alpha2))
-            gunType = 1;
+            gunType = GunType.Pistol;
 
         Debug.Log(gunType);
     }
