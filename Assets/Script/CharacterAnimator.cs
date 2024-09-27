@@ -7,6 +7,7 @@ public class CharacterAnimator : MonoBehaviour
 {
     Animator animator;
     CharacterMove move;
+    CharacterAttack attack;
     float idleMoveX;
     float idleMoveY;
 
@@ -14,6 +15,7 @@ public class CharacterAnimator : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         move = GetComponent<CharacterMove>();
+        attack = GetComponent<CharacterAttack>();
 
     }
 
@@ -55,23 +57,24 @@ public class CharacterAnimator : MonoBehaviour
     }
     void HandleAttack()
     {
-        if (Input.GetMouseButtonDown(0) && move.canShoot && move.gunType == GunType.Pistol)
+        if (Input.GetMouseButtonDown(0) && attack.canShoot && attack.gunType == GunType.Pistol && attack.HandleChangeGun().Ammo > 0)
         {
             animator.SetFloat("ShootX", move.GetShootingDirection().x);
             animator.SetFloat("ShootY", move.GetShootingDirection().y);
-            animator.SetBool("IsAttack", true);
+            animator.SetBool("IsAttack", true); 
+
         }
-        else if (Input.GetMouseButtonDown(0) && move.canShoot && move.gunType == GunType.Knife)
+        else if (Input.GetMouseButtonDown(0) && attack.canShoot && attack.gunType == GunType.Knife)
         {
             animator.SetFloat("ShootX", move.GetShootingDirection().x);
             animator.SetFloat("ShootY", move.GetShootingDirection().y);
             animator.SetTrigger("Melee");
-            move.Stab();
+            attack.Stab();
         }
         else if (!Input.GetMouseButtonUp(0))
         {
             animator.SetBool("IsAttack", false);
-            move.canShoot = true;
+            attack.canShoot = true;
         }
     }
 
