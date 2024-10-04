@@ -5,17 +5,18 @@ using UnityEngine;
 public class BulletScript : MonoBehaviour
 {
     CharacterAttack attack;
-    CharacterMove CharacterMove;
+    CharacterActions CharacterMove;
     // Start is called before the first frame update
     void Start()
     {
-        attack = GetComponent<CharacterAttack>();
-        CharacterMove = FindObjectOfType<CharacterMove>();
+        attack = FindObjectOfType<CharacterAttack>();
+        CharacterMove = FindObjectOfType<CharacterActions>();
         Vector3 shootingDirection = CharacterMove.GetShootingDirection();
         float angle = Mathf.Atan2(shootingDirection.y, shootingDirection.x) * Mathf.Rad2Deg;
         gameObject.GetComponent<Rigidbody2D>().velocity = shootingDirection * attack.HandleChangeGun().AttackSpeed;
         gameObject.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
         Destroy(gameObject, 4f);
+        attack.swapBlock = false;
     }
 
 }

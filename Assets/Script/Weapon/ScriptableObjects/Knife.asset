@@ -10,14 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e4936bbe331614445b435dc9f4223f0b, type: 3}
-  m_Name: CrossBow
+  m_Name: Knife
   m_EditorClassIdentifier: 
-  Ammo: 1
-  MaxAmmo: 1
-  LimitAmmo: 10
-  MagazineSize: 9
-  Damage: 20
-  AttackSpeed: 20
+  Ammo: 0
+  MaxAmmo: 0
+  LimitAmmo: 0
+  MagazineSize: 0
+  Damage: 0
+  AttackSpeed: 5
   ReloadTime: 2
-  GunType: 2
-  ProjPrefab: {fileID: 5282163714013862578, guid: b86345144b07da4479cb9285f753c10d, type: 3}
+  GunType: 0
+  ProjPrefab: {fileID: 6458840862631346980, guid: 40fd8aa6d12cf834081b42440194d560, type: 3}
+  BulletType: 0

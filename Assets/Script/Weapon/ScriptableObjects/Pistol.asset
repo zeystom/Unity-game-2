@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4936bbe331614445b435dc9f4223f0b, type: 3}
   m_Name: Pistol
   m_EditorClassIdentifier: 
-  Ammo: 10
+  Ammo: 9
   MaxAmmo: 30
   LimitAmmo: 60
   MagazineSize: 10
   Damage: 10
-  AttackSpeed: 5
+  AttackSpeed: 10
   ReloadTime: 2
   GunType: 1
   ProjPrefab: {fileID: 6458840862631346980, guid: 40fd8aa6d12cf834081b42440194d560, type: 3}
+  BulletType: 0

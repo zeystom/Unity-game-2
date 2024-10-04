@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 public class CharacterAnimator : MonoBehaviour
 {
     Animator animator;
-    CharacterMove move;
+    CharacterActions move;
     CharacterAttack attack;
     float idleMoveX;
     float idleMoveY;
@@ -14,7 +14,7 @@ public class CharacterAnimator : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
-        move = GetComponent<CharacterMove>();
+        move = GetComponent<CharacterActions>();
         attack = GetComponent<CharacterAttack>();
 
     }
@@ -52,13 +52,14 @@ public class CharacterAnimator : MonoBehaviour
         }
         else
         {
-            Animate(idleMoveX, idleMoveY, 0);
+            Animate(idleMoveX, idleMoveY, 0);   
         }
     }
     void HandleAttack()
     {
         if (Input.GetMouseButtonDown(0) && attack.canShoot && attack.gunType == GunType.Pistol && attack.HandleChangeGun().Ammo > 0)
         {
+            attack.swapBlock = true;
             animator.SetFloat("ShootX", move.GetShootingDirection().x);
             animator.SetFloat("ShootY", move.GetShootingDirection().y);
             animator.SetBool("IsAttack", true); 

@@ -17,6 +17,7 @@ public class CharacterStats : MonoBehaviour
     CharacterStats()
     {
         this.Hp = this.MaxHp;
+        this.Armor = this.MaxArmor;
   
     }
 
