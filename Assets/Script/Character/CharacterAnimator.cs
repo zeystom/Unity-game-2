@@ -65,7 +65,9 @@ public class CharacterAnimator : MonoBehaviour
             attack.swapBlock = true;
             animator.SetFloat("ShootX", move.GetShootingDirection().x);
             animator.SetFloat("ShootY", move.GetShootingDirection().y);
-            animator.SetBool("IsPistol", true);
+            animator.SetTrigger("Pistol");
+            animator.SetBool("IsAttack", true);
+
             attack.isReloading = false;
             ui.FillCircleOnce();
         }
@@ -75,7 +77,9 @@ public class CharacterAnimator : MonoBehaviour
             attack.swapBlock = true;
             animator.SetFloat("ShootX", move.GetShootingDirection().x);
             animator.SetFloat("ShootY", move.GetShootingDirection().y);
-            animator.SetBool("IsCrosb", true);
+            animator.SetTrigger("Crossbow");
+            animator.SetBool("IsAttack", true);
+
             attack.isReloading = false;
             ui.FillCircleOnce();
             
@@ -90,8 +94,8 @@ public class CharacterAnimator : MonoBehaviour
         }
         else if (!Input.GetMouseButtonUp(0))
         {
-            animator.SetBool("IsCrosb", false);
-            animator.SetBool("IsPistol", false);
+            animator.SetBool("IsAttack", false);
+     
             attack.canShoot = true;
         }
     }
