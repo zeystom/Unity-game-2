@@ -17,7 +17,7 @@ public class CharacterAttack : MonoBehaviour
     CharacterActions playerMove;
     CharacterStats stats;
     UIScript ui;
-    bool isReloading = false;
+    public bool isReloading = false;
     float reloadTimer = 0f;
     public bool swapBlock = false;
 
@@ -76,16 +76,18 @@ public class CharacterAttack : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R)) 
         {
-            if (HandleChangeGun().Ammo != HandleChangeGun().MagazineSize)
+            if (HandleChangeGun().Ammo != HandleChangeGun().MagazineSize && HandleChangeGun().MaxAmmo != 0)
             {
                 isReloading = true;
                 reloadTimer = 0f;
+               
             }
         }
 
         if (isReloading)
         {
             reloadTimer += Time.deltaTime;
+            ui.FillCircleProgressive(reloadTimer / HandleChangeGun().ReloadTime, gunType);
             if (reloadTimer > HandleChangeGun().ReloadTime)
             {
                 CompleteReload();
@@ -126,19 +128,24 @@ public class CharacterAttack : MonoBehaviour
         {
             gunType = GunType.Crossbow;
             isReloading = false;
+            ui.FillCircleOnce();
         }
 
         else if (Input.GetKeyDown(KeyCode.Alpha2) && !swapBlock)
         {
             gunType = GunType.Pistol;
             isReloading = false;
+            ui.FillCircleOnce();
+
         }
         else if (Input.GetKeyDown(KeyCode.Alpha1) && !swapBlock)
         {
             gunType = GunType.Knife;
             isReloading = false;
+            ui.FillCircleOnce();
+
         }
- 
+
 
         ui.OnChangeGun(gunType);
         foreach (var weapon in weapons)

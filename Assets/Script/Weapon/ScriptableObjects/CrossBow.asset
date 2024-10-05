@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CrossBow
   m_EditorClassIdentifier: 
   Ammo: 1
-  MaxAmmo: 3
+  MaxAmmo: 5
   LimitAmmo: 10
   MagazineSize: 1
   Damage: 20
@@ -21,3 +21,4 @@ MonoBehaviour:
   ReloadTime: 2
   GunType: 2
   ProjPrefab: {fileID: 5282163714013862578, guid: b86345144b07da4479cb9285f753c10d, type: 3}
+  BulletType: 3

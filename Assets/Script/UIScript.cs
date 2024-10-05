@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Xml;
 
 public class UIScript : MonoBehaviour
 {
-
     CharacterStats stats;
     CharacterAttack characterAttack;
+
     [Header("Bars")]
     [SerializeField] Slider hpBar;
     [SerializeField] Slider armorBar;
@@ -33,14 +32,24 @@ public class UIScript : MonoBehaviour
     Color opacity;
     Color noOpacity;
 
+    Dictionary<GunType, (Image frame, Image icon)> gunDictionary;
+
     void Start()
     {
         stats = FindObjectOfType<CharacterStats>();
         characterAttack = FindObjectOfType<CharacterAttack>();
+
         opacity = KnifeFrameICO.color;
         opacity.a = 0.5f;
         noOpacity = KnifeFrameICO.color;
         noOpacity.a = 1.0f;
+
+        gunDictionary = new Dictionary<GunType, (Image, Image)>
+        {
+            { GunType.Knife, (KnifeFrame, KnifeFrameICO) },
+            { GunType.Pistol, (PistolFrame, PistolFrameICO) },
+            { GunType.Crossbow, (CrossbowFrame, CrossbowFrameICO) }
+        };
     }
 
     void Update()
@@ -48,69 +57,70 @@ public class UIScript : MonoBehaviour
         InitializeStats();
     }
 
-
     public void OnChangeGun(GunType gunType)
     {
-        if (gunType == GunType.Knife) 
+        foreach (var gun in gunDictionary)
         {
-            KnifeFrame.color = Color.red;
-            CrossbowFrame.color = Color.white;
-            PistolFrame.color = Color.white;
-            
-            passiveColor(KnifeFrameICO, PistolFrameICO, CrossbowFrameICO);
+            if (gun.Key == gunType)
+            {
+                gun.Value.frame.color = Color.red;
+                gun.Value.icon.color = noOpacity;
 
-        }
-        else if (gunType == GunType.Pistol)
-        {
-            KnifeFrame.color = Color.white;
-            CrossbowFrame.color = Color.white;
-            PistolFrame.color = Color.red;
+            }
+            else
+            {
+                gun.Value.frame.color = Color.white;
+                gun.Value.icon.color = opacity;
 
-            passiveColor(PistolFrameICO, KnifeFrameICO, CrossbowFrameICO);
+            }
 
-        }
-        else
-        {
-            KnifeFrame.color = Color.white;
-            CrossbowFrame.color = Color.red;
-            PistolFrame.color = Color.white;
-
-            passiveColor(CrossbowFrameICO, KnifeFrameICO, PistolFrameICO);
         }
     }
 
-
-    void passiveColor(Image headImage, Image secondaryImage, Image secondaryImage2)
+    public void FillCircleProgressive(float progress, GunType gunType)
     {
-        headImage.color = noOpacity;
-        secondaryImage.color = opacity;
-        secondaryImage2.color = opacity;
+
+        foreach (var gun in gunDictionary)
+        {
+            if (gun.Key == gunType)
+            {
+                gun.Value.frame.fillAmount = Mathf.Clamp01(progress);
+
+            }
+
+
+
+        } 
     }
-
-
-
-    public void ReloadCircleToNull()
+    public void FillCircleOnce()
     {
-        PistolFrame.fillAmount = 0;
+
+        foreach (var gun in gunDictionary)
+        {
+
+            gun.Value.frame.fillAmount = 1;
+
+
+        }
     }
 
 
     void InitializeStats()
     {
-
         hpBar.value = stats.Hp;
         armorBar.value = stats.Armor;
         expBar.value = stats.Experience;
         lvlText.text = stats.Level.ToString();
+
         if (characterAttack.HandleChangeGun().GunType == GunType.Knife)
         {
             ammoText.text = "";
         }
         else
         {
-            ammoText.text = characterAttack.HandleChangeGun().Ammo + "/" + characterAttack.HandleChangeGun().MaxAmmo;
+            ammoText.text = $"{characterAttack.HandleChangeGun().Ammo}/{characterAttack.HandleChangeGun().MaxAmmo}";
         }
+
         moneyText.text = "$ " + stats.Money;
     }
-  
 }

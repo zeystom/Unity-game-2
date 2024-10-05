@@ -8,6 +8,7 @@ public class CharacterAnimator : MonoBehaviour
     Animator animator;
     CharacterActions move;
     CharacterAttack attack;
+    UIScript ui;
     float idleMoveX;
     float idleMoveY;
 
@@ -16,6 +17,7 @@ public class CharacterAnimator : MonoBehaviour
         animator = GetComponent<Animator>();
         move = GetComponent<CharacterActions>();
         attack = GetComponent<CharacterAttack>();
+        ui = FindObjectOfType<UIScript>();
 
     }
 
@@ -59,12 +61,26 @@ public class CharacterAnimator : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && attack.canShoot && attack.gunType == GunType.Pistol && attack.HandleChangeGun().Ammo > 0)
         {
+
             attack.swapBlock = true;
             animator.SetFloat("ShootX", move.GetShootingDirection().x);
             animator.SetFloat("ShootY", move.GetShootingDirection().y);
-            animator.SetBool("IsAttack", true); 
-
+            animator.SetBool("IsPistol", true);
+            attack.isReloading = false;
+            ui.FillCircleOnce();
         }
+
+        else if (Input.GetMouseButtonDown(0) && attack.canShoot && attack.gunType == GunType.Crossbow && attack.HandleChangeGun().Ammo > 0)
+        {
+            attack.swapBlock = true;
+            animator.SetFloat("ShootX", move.GetShootingDirection().x);
+            animator.SetFloat("ShootY", move.GetShootingDirection().y);
+            animator.SetBool("IsCrosb", true);
+            attack.isReloading = false;
+            ui.FillCircleOnce();
+            
+        }
+
         else if (Input.GetMouseButtonDown(0) && attack.canShoot && attack.gunType == GunType.Knife)
         {
             animator.SetFloat("ShootX", move.GetShootingDirection().x);
@@ -74,7 +90,8 @@ public class CharacterAnimator : MonoBehaviour
         }
         else if (!Input.GetMouseButtonUp(0))
         {
-            animator.SetBool("IsAttack", false);
+            animator.SetBool("IsCrosb", false);
+            animator.SetBool("IsPistol", false);
             attack.canShoot = true;
         }
     }
