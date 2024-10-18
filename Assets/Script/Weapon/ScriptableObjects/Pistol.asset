@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4936bbe331614445b435dc9f4223f0b, type: 3}
   m_Name: Pistol
   m_EditorClassIdentifier: 
-  Ammo: 8
-  MaxAmmo: 10
-  LimitAmmo: 10
+  Ammo: 10
+  MaxAmmo: 30
+  LimitAmmo: 30
   MagazineSize: 10
   Damage: 10
   AttackSpeed: 10

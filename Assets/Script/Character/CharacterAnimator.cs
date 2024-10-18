@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class CharacterAnimator : MonoBehaviour
 {
@@ -9,6 +6,7 @@ public class CharacterAnimator : MonoBehaviour
     CharacterActions move;
     CharacterAttack attack;
     UIScript ui;
+    ShopScript shop;
     float idleMoveX;
     float idleMoveY;
 
@@ -18,6 +16,7 @@ public class CharacterAnimator : MonoBehaviour
         move = GetComponent<CharacterActions>();
         attack = GetComponent<CharacterAttack>();
         ui = FindObjectOfType<UIScript>();
+        shop = FindObjectOfType<ShopScript>();
 
     }
 
@@ -54,11 +53,15 @@ public class CharacterAnimator : MonoBehaviour
         }
         else
         {
-            Animate(idleMoveX, idleMoveY, 0);   
+            Animate(idleMoveX, idleMoveY, 0);
         }
     }
     void HandleAttack()
     {
+        if (shop.inShop)
+        {
+            return;
+        }
         if (Input.GetMouseButtonDown(0) && attack.canShoot && attack.gunType == GunType.Pistol && attack.HandleChangeGun().Ammo > 0)
         {
 
@@ -82,7 +85,7 @@ public class CharacterAnimator : MonoBehaviour
 
             attack.isReloading = false;
             ui.FillCircleOnce();
-            
+
         }
 
         else if (Input.GetMouseButtonDown(0) && attack.canShoot && attack.gunType == GunType.Knife)
@@ -95,7 +98,7 @@ public class CharacterAnimator : MonoBehaviour
         else if (!Input.GetMouseButtonUp(0))
         {
             animator.SetBool("IsAttack", false);
-     
+
             attack.canShoot = true;
         }
     }

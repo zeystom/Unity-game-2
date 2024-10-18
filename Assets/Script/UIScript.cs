@@ -88,21 +88,23 @@ public class UIScript : MonoBehaviour
 
             }
 
-
-
         } 
     }
     public void FillCircleOnce()
     {
-
         foreach (var gun in gunDictionary)
         {
-
             gun.Value.frame.fillAmount = 1;
-
-
         }
     }
+
+    public void FillExp(int progress)
+    {
+        expBar.maxValue = progress;
+        hpBar.maxValue = stats.MaxHp;
+        armorBar.maxValue = stats.MaxArmor;
+    }
+
 
 
     void InitializeStats()
@@ -111,6 +113,7 @@ public class UIScript : MonoBehaviour
         armorBar.value = stats.Armor;
         expBar.value = stats.Experience;
         lvlText.text = stats.Level.ToString();
+
 
         if (characterAttack.HandleChangeGun().GunType == GunType.Knife)
         {

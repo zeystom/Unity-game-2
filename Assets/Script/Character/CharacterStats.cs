@@ -5,19 +5,19 @@ using UnityEngine;
 public class CharacterStats : MonoBehaviour
 
 {
-    public int Hp { get; set; }
-    public int MaxHp { get; set; } = 100;
-    public int Experience { get; set; } = 0;
-    public int Level { get; set; } = 1;
-    public int Armor { get; set; }
-    public int MaxArmor { get; set; } = 100;
-
-    public int Money { get; set; } = 0;
+    public int Hp ;
+    public int MaxHp = 100;
+    public int Experience;
+    public int MaxExperience = 1000;
+    public int Level = 3;
+    public int Armor;
+    public int MaxArmor = 50;
+    public int Money;
 
     CharacterStats()
     {
-        this.Hp = this.MaxHp;
-        this.Armor = this.MaxArmor;
+        //this.Hp = this.MaxHp;
+        //this.Armor = this.MaxArmor;
   
     }
 

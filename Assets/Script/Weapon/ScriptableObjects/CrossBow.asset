@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CrossBow
   m_EditorClassIdentifier: 
   Ammo: 1
-  MaxAmmo: 5
+  MaxAmmo: 10
   LimitAmmo: 10
   MagazineSize: 1
   Damage: 20

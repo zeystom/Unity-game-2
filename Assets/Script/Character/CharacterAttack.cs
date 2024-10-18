@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -36,7 +35,7 @@ public class CharacterAttack : MonoBehaviour
     {
         HandleChangeGun();
         Reload();
-        
+       
     }
 
 
@@ -59,6 +58,7 @@ public class CharacterAttack : MonoBehaviour
     public void Stab()
     {
         Collider2D enemy = Physics2D.OverlapCircle(meleeAttackPoint.position, meleeAttackRange);
+        canShoot = false;
         if (enemy != null)
         {
             Debug.Log("stab!");
@@ -72,15 +72,15 @@ public class CharacterAttack : MonoBehaviour
 
 
 
-     void Reload()
+    void Reload()
     {
-        if (Input.GetKeyDown(KeyCode.R)) 
+        if (Input.GetKeyDown(KeyCode.R))
         {
             if (HandleChangeGun().Ammo != HandleChangeGun().MagazineSize && HandleChangeGun().MaxAmmo != 0)
             {
                 isReloading = true;
                 reloadTimer = 0f;
-               
+
             }
         }
 
@@ -94,7 +94,7 @@ public class CharacterAttack : MonoBehaviour
             }
         }
     }
-    
+
     void CompleteReload()
     {
 
@@ -117,12 +117,12 @@ public class CharacterAttack : MonoBehaviour
 
         isReloading = false;
     }
-    
+
     public WeaponScript HandleChangeGun()
     {
         WeaponScript weapon1 = null;
 
-   
+
 
         if (Input.GetKeyDown(KeyCode.Alpha3) && !swapBlock)
         {
@@ -150,7 +150,7 @@ public class CharacterAttack : MonoBehaviour
         ui.OnChangeGun(gunType);
         foreach (var weapon in weapons)
         {
-            if(weapon.GunType == gunType)
+            if (weapon.GunType == gunType)
             {
                 weapon1 = weapon;
             }
