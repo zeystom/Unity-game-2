@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 public class EnemyScript : MonoBehaviour
@@ -11,31 +13,42 @@ public class EnemyScript : MonoBehaviour
     public int EnemyDamage { get; set; }
     public int EnemySpeed { get; set; }
     float distancetoPlayer;
-    float chaseDistance = 7f;
+    float chaseDistance = 14f;
     float attackDistance = 1f;
-    float roamingDistance = 10f;
+    float roamingDistance = 15f;
     float roamRadius = 10f;
     Vector2 roamPoint;
+
+    bool isAttacking;
+
+
+    CharacterStats characterStats;
 
     GameObject player;
     Vector2 vector;
     Animator animator;
 
+    bool deathBlock = false;
+
+   public List<GameObject> items;
 
     ZombieState currentState = ZombieState.Roaming;
     public enum ZombieState{
         Roaming,
         Chasing,
         Attacking,
+        Death
         }
 
     
     // Start is called before the first frame update
     void Start()
     {
+        EnemyMaxHp = 100;
+        characterStats =FindObjectOfType<CharacterStats>();
         EnemyHp = EnemyMaxHp;
         EnemyDamage = 25;
-        EnemySpeed = 1;
+        EnemySpeed = 4;
         player = GameObject.FindGameObjectWithTag("Player");
         animator = GetComponent<Animator>();
     }
@@ -43,11 +56,11 @@ public class EnemyScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        AnimatorSetData();
+   
      distancetoPlayer = Vector2.Distance(transform.position, player.transform.position);
 
         SwitchState(distancetoPlayer);
-        //Debug.Log(distancetoPlayer);
+
         switch (currentState) {
    
             case ZombieState.Roaming:
@@ -60,14 +73,42 @@ public class EnemyScript : MonoBehaviour
             case ZombieState.Chasing:
                 ZombieChasing();
                 break;
+            case ZombieState.Death:
+                break;
+
         }
+
+    }
+    public void ZombieDying()
+    {
+        currentState = ZombieState.Death;
+
+
+        if (!deathBlock)
+        {
+            animator.SetTrigger("deathTrigger");
+            deathBlock = true;
+        }
+
+        }
+
+    void Destroy()
+    {
+        DropGoods();
+        Destroy(gameObject);
 
     }
 
     void SwitchState(float DistanceToPlayer)
     {
         Debug.Log(currentState);
-        if (distancetoPlayer < attackDistance)
+
+        if (EnemyHp <= 0)
+        {
+            currentState = ZombieState.Death;
+            return;
+        }       
+        else if (distancetoPlayer < attackDistance)
         {
             currentState = ZombieState.Attacking;
         }
@@ -87,31 +128,84 @@ public class EnemyScript : MonoBehaviour
     private void ZombieRoaming()
     {
         transform.position = Vector2.MoveTowards(transform.position, roamPoint, EnemySpeed * Time.deltaTime);
+        vector = (Vector3)roamPoint - gameObject.transform.position;
+        AnimatorSetData(vector);
         if (Vector2.Distance(transform.position, roamPoint) < 0.1f)
-            roamPoint = GetRandomPoint();
+            roamPoint = GetRandomPoint(transform.position, roamRadius);
     }
 
     private void ZombieAttacking()
     {
+        animator.SetBool("isAttackZomb", true);
+
         Debug.Log("attack");
     }
 
     private void ZombieChasing()
     {
+        animator.SetBool("isAttackZomb", false);
+        vector = player.transform.position - gameObject.transform.position;
+        AnimatorSetData(vector);
         transform.position = Vector2.MoveTowards(transform.position,player.transform.position, EnemySpeed * Time.deltaTime);
 
     }
 
-    Vector2 GetRandomPoint()
+    public Vector3 GetRandomPoint(Vector3 transpos, float radius)
     {
-        return (Vector2)transform.position + Random.insideUnitCircle * roamRadius;
+        return transpos + (Random.insideUnitSphere * radius);
     }
 
-    void AnimatorSetData()
+    void AnimatorSetData(Vector3 vector)
     {
         
-        animator.SetFloat("eX", roamPoint.x);
-        animator.SetFloat("eY", roamPoint.y);
+        animator.SetFloat("eX", vector.x);
+        animator.SetFloat("eY", vector.y);
+    }
+
+
+    public void Attack()
+    {
+        if (!isAttacking)
+        {
+            EnemyDamage = Random.Range(5, 10);
+            isAttacking = true;
+            if (characterStats.Armor >= EnemyDamage)
+            {
+                characterStats.Armor -= EnemyDamage;
+            }
+            else
+            {
+                characterStats.Hp -= Math.Abs(characterStats.Armor - EnemyDamage);
+                characterStats.Armor = 0;
+            }
+
+            
+            if (characterStats.Hp <= 0)
+            {
+                SceneManager.LoadScene(0);
+            }
+        }
+    }
+
+
+    public void EndAttack()
+    {
+        isAttacking = false;
+    }
+    
+    void DropGoods()
+    {
+        var randomCount = Random.Range(1, 3);
+        for (int i = 0; i < randomCount; i++) 
+        {
+            var randomItem = Random.Range(0, items.Count);
+
+            var Randomchik = Random.Range(1, 5);
+
+            Instantiate(items[randomItem], GetRandomPoint(transform.position,2)  , Quaternion.identity);
+
+        }
+
     }
 
 }

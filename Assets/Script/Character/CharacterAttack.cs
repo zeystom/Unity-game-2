@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,6 +16,7 @@ public class CharacterAttack : MonoBehaviour
     [SerializeField] float meleeAttackRange = 1f;
     CharacterActions playerMove;
     CharacterStats stats;
+    EnemyScript enemy;
     UIScript ui;
     public bool isReloading = false;
     float reloadTimer = 0f;
@@ -35,7 +37,7 @@ public class CharacterAttack : MonoBehaviour
     {
         HandleChangeGun();
         Reload();
-       
+        Debug.Log(stats.Hp);
     }
 
 
@@ -61,7 +63,7 @@ public class CharacterAttack : MonoBehaviour
         canShoot = false;
         if (enemy != null)
         {
-            Debug.Log("stab!");
+            enemy.gameObject.GetComponent<EnemyScript>().EnemyHp -= 50;
         }
         else
         {

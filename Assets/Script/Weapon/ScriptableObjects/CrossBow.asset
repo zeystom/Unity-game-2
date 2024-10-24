@@ -16,7 +16,7 @@ MonoBehaviour:
   MaxAmmo: 10
   LimitAmmo: 10
   MagazineSize: 1
-  Damage: 20
+  Damage: 50
   AttackSpeed: 20
   ReloadTime: 2
   GunType: 2

@@ -16,8 +16,8 @@ MonoBehaviour:
   MaxAmmo: 30
   LimitAmmo: 30
   MagazineSize: 10
-  Damage: 10
-  AttackSpeed: 10
+  Damage: 25
+  AttackSpeed: 30
   ReloadTime: 2
   GunType: 1
   ProjPrefab: {fileID: 6458840862631346980, guid: 40fd8aa6d12cf834081b42440194d560, type: 3}
