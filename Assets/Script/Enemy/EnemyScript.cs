@@ -8,16 +8,17 @@ using Random = UnityEngine.Random;
 
 public class EnemyScript : MonoBehaviour
 {
-    public int EnemyMaxHp { get; set; }
-    public int EnemyHp { get; set; }
-    public int EnemyDamage { get; set; }
-    public int EnemySpeed { get; set; }
+    public int EnemyMaxHp;
+    public int EnemyHp;
+    public int EnemyDamage;
+    public int EnemySpeed;
     float distancetoPlayer;
-    float chaseDistance = 14f;
+    float chaseDistance = 9f;
     float attackDistance = 1f;
     float roamingDistance = 15f;
     float roamRadius = 10f;
     Vector2 roamPoint;
+
 
     bool isAttacking;
 
@@ -44,11 +45,10 @@ public class EnemyScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        EnemyMaxHp = 100;
+
         characterStats =FindObjectOfType<CharacterStats>();
         EnemyHp = EnemyMaxHp;
-        EnemyDamage = 25;
-        EnemySpeed = 4;
+
         player = GameObject.FindGameObjectWithTag("Player");
         animator = GetComponent<Animator>();
     }
@@ -56,11 +56,9 @@ public class EnemyScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-   
      distancetoPlayer = Vector2.Distance(transform.position, player.transform.position);
 
         SwitchState(distancetoPlayer);
-
         switch (currentState) {
    
             case ZombieState.Roaming:
@@ -74,16 +72,18 @@ public class EnemyScript : MonoBehaviour
                 ZombieChasing();
                 break;
             case ZombieState.Death:
+                ZombieDying();
                 break;
 
         }
 
     }
+
+
+
     public void ZombieDying()
     {
-        currentState = ZombieState.Death;
-
-
+  
         if (!deathBlock)
         {
             animator.SetTrigger("deathTrigger");
@@ -96,7 +96,7 @@ public class EnemyScript : MonoBehaviour
     {
         DropGoods();
         Destroy(gameObject);
-
+        EnemySpawner.enemyCounter += 1;   
     }
 
     void SwitchState(float DistanceToPlayer)
@@ -138,7 +138,6 @@ public class EnemyScript : MonoBehaviour
     {
         animator.SetBool("isAttackZomb", true);
 
-        Debug.Log("attack");
     }
 
     private void ZombieChasing()

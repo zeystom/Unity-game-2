@@ -17,7 +17,6 @@ public class BulletScript : MonoBehaviour
         gameObject.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
         Destroy(gameObject, 8f);
 
-        attack.swapBlock = false;
 
     
     
@@ -29,12 +28,8 @@ public class BulletScript : MonoBehaviour
         {
             var EMINEM = collision.gameObject.GetComponent<EnemyScript>();
             EMINEM.EnemyHp -= attack.HandleChangeGun().Damage;
-            Debug.Log("ZOMBIE "+ EMINEM.EnemyHp);
             Destroy(gameObject);
-            if(EMINEM.EnemyHp <= 0)
-            {
-                EMINEM.ZombieDying();
-            }
+        
         }
     }
 

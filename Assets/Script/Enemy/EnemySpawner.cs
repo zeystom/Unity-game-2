@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
+    public static int enemyCounter;
     public GameObject enemy;
+    public GameObject boss;
     int count = 5;
     int mincount = 1;
     int maxcount = 10;
@@ -18,13 +20,18 @@ public class EnemySpawner : MonoBehaviour
         {
             var rndPoint = Random.Range(0, spawnPoints.Count);
             SpawnEnemies(spawnPoints[rndPoint]);
+
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if(enemyCounter >= count)
+        {
+            Instantiate(boss,transform.position,Quaternion.identity);
+            enemyCounter = 0;
+        }
     }
 
     void SpawnEnemies(Transform point)

@@ -37,7 +37,6 @@ public class CharacterAttack : MonoBehaviour
     {
         HandleChangeGun();
         Reload();
-        Debug.Log(stats.Hp);
     }
 
 
@@ -54,6 +53,7 @@ public class CharacterAttack : MonoBehaviour
             Instantiate(HandleChangeGun().ProjPrefab, transform.position + playerMove.GetShootingDirection(), Quaternion.identity);
             canShoot = false;
             HandleChangeGun().Ammo -= 1;
+            ;
         }
     }
 
@@ -61,14 +61,15 @@ public class CharacterAttack : MonoBehaviour
     {
         Collider2D enemy = Physics2D.OverlapCircle(meleeAttackPoint.position, meleeAttackRange);
         canShoot = false;
-        if (enemy != null)
+        Debug.Log(enemy.name);
+
+        if (enemy != null && enemy.tag == "Enemy")
         {
-            enemy.gameObject.GetComponent<EnemyScript>().EnemyHp -= 50;
+
+            Debug.Log(enemy.name);
+            enemy.gameObject.GetComponent<EnemyScript>().EnemyHp -= HandleChangeGun().Damage;
         }
-        else
-        {
-            Debug.Log("stabik");
-        }
+        
     }
 
 
@@ -96,6 +97,12 @@ public class CharacterAttack : MonoBehaviour
             }
         }
     }
+
+    public void Unblock()
+    {
+        swapBlock = false;
+    }
+
 
     void CompleteReload()
     {
