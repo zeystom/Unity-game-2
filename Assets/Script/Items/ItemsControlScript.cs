@@ -7,12 +7,14 @@ public class Items : MonoBehaviour
     public ItemScript item;
     CharacterStats playerStats;
     CharacterAttack attack;
+    CharacterInventory inventory;
     UIScript ui;
     void Start()
     {
         playerStats = FindObjectOfType<CharacterStats>();
         attack = FindObjectOfType<CharacterAttack>();
         ui = FindObjectOfType<UIScript>();
+        inventory = FindObjectOfType<CharacterInventory>();
     }
 
     void Update()
@@ -54,11 +56,15 @@ public class Items : MonoBehaviour
             switch (item.ItemType)
             {
                 case ItemType.ARMOR:
-                    CheckMax(ref playerStats.Armor, playerStats.MaxArmor, item.Value, true  );
-                      break;
+                    //CheckMax(ref playerStats.Armor, playerStats.MaxArmor, item.Value, true  );
+                    inventory.AddToInventory(item);  
+                    
+                    break;
                 case ItemType.MEDECINE:
-                    CheckMax(ref playerStats.Hp, playerStats.MaxHp, item.Value, true);
-                     break; 
+                    //CheckMax(ref playerStats.Hp, playerStats.MaxHp, item.Value, true);
+                    inventory.AddToInventory(item);
+
+                    break; 
                 case ItemType.MONEY:
                     CheckMax(ref playerStats.Money, 931231232, item.Value, true);
                     break;

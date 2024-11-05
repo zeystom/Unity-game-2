@@ -56,7 +56,7 @@ public class CharacterAnimator : MonoBehaviour
             Animate(idleMoveX, idleMoveY, 0);
         }
     }
-    void HandleAttack()
+    void HandleAttack() 
     {
         if (shop.inShop)
         {

@@ -14,7 +14,7 @@ public class EnemyScript : MonoBehaviour
     public int EnemySpeed;
     float distancetoPlayer;
     float chaseDistance = 9f;
-    float attackDistance = 1f;
+    public float attackDistance = 1f;
     float roamingDistance = 15f;
     float roamRadius = 10f;
     Vector2 roamPoint;
@@ -51,6 +51,7 @@ public class EnemyScript : MonoBehaviour
 
         player = GameObject.FindGameObjectWithTag("Player");
         animator = GetComponent<Animator>();
+        
     }
 
     // Update is called once per frame
